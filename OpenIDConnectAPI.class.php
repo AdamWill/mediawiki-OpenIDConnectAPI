@@ -1,6 +1,9 @@
 <?php
 const BEARER_TOKEN_PREFIX = 'Bearer ';
 
+use MediaWiki\MediaWikiServices;
+use MediaWiki\User\UserIdentity;
+
 require_once('/usr/share/php/rmccue/Requests/Requests.php');
 Requests::register_autoloader();
 
@@ -18,7 +21,7 @@ class OpenIDConnectAPI {
                     die('Auth error');
                 }
 
-                $uid = $main->getContext()->getUser()->idFromName($username);
+                $uid = MediaWikiServices::getInstance()->getUserIdentityLookup()->getUserIdentityByName($username)->getId();
                 if(is_null($uid)) {
                     http_response_code(401);
                     die('Unknown user');
